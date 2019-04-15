@@ -4,6 +4,7 @@
 #since this is essentially what our project is
 
 
+
 from __future__ import absolute_import, division, print_function
 
 # TensorFlow and tf.keras
@@ -18,13 +19,21 @@ print(tf.__version__)
 
 
 #these lines download the dataset
-fashion_mnist = keras.datasets.fashion_mnist
+
+#we can use the fashion dataset or the handwritten digit (0-9) dataset
+#fashion_mnist = keras.datasets.fashion_mnist
+fashion_mnist = keras.datasets.mnist
 
 (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
 
 #this prints the first test data (datum?) and its label
 #this is an array map of grayscale values and the corresponding label (9, so ankle boot)
-print(train_images[0])
+for x in train_images[0]:
+    for y in x:
+        print(str('%03d' % y)+" ", end="")
+    print("\n")
+
+print(train_images[0][12])
 print(train_labels[0])
 
 #this is just a map so printing is easier
