@@ -23,7 +23,6 @@ print(tf.__version__)
 #we can use the fashion dataset or the handwritten digit (0-9) dataset
 #fashion_mnist = keras.datasets.fashion_mnist
 fashion_mnist = keras.datasets.mnist
-
 (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
 
 #this prints the first test data (datum?) and its label
@@ -66,16 +65,11 @@ plt.show()
 
 #this does more processing to the image, cconverting it from a 28x28 matrix to a 784 length array.
 #the dense commands actually create neurons/nodes
-model = keras.Sequential([
-    keras.layers.Flatten(input_shape=(28, 28)),
-    keras.layers.Dense(128, activation=tf.nn.relu),
-    keras.layers.Dense(10, activation=tf.nn.softmax)
-])
+model = keras.Sequential([keras.layers.Flatten(input_shape=(28, 28)), keras.layers.Dense(128, activation=tf.nn.relu),
+    keras.layers.Dense(10, activation=tf.nn.softmax)])
 
 #this tells the neural net how to update things for training
-model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 #this is the actual 'train' step
 #you can play with epochs, increasing it takes longer but provides slightly more accuracy
@@ -92,7 +86,7 @@ print('Test accuracy:', test_acc)
 
 '''
 Where to go from here?
-First we'll need a simple handwritting dataset.  We'll use that with labels to train a new
+First we'll need a simple handwritting dataset (https://www.nist.gov/node/1298471/emnist-dataset may work?).  We'll use that with labels to train a new
 neural net and then we'll have something that can recognize individual characters.
 After that we'll just need to find a way to look at an image with handwritting and convert it
 to a series of character images for us to process (openCV for this might work well)
