@@ -29,21 +29,30 @@ import time
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
-
-
-img = cv2.imread('handwriting.jpg',0)
-edges = cv2.Canny(img,100,200)
-
-plt.subplot(121),plt.imshow(img,cmap = 'gray')
-plt.title('Original Image'), plt.xticks([]), plt.yticks([])
-plt.subplot(122),plt.imshow(edges,cmap = 'gray')
-plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
-
-plt.show()
+import glob
 
 
 
-'''
+
+#build blob detector
+params = cv2.SimpleBlobDetector_Params()
+
+# Change thresholds
+params.minThreshold = 10
+params.maxThreshold = 200
+
+
+# Filter by Area.
+params.filterByArea = True
+params.minArea = 150
+
+# Filter by Inertia
+params.filterByInertia = True
+params.minInertiaRatio = 0.01
+# Create a detector with the parameters
+detector = cv2.SimpleBlobDetector_create(params)
+
+
 
 
 # construct the argument parser and parse the arguments
@@ -74,7 +83,6 @@ files = []
 while True:
 	# grab the current frame, then handle if we are using a
 	# VideoStream or VideoCapture object
-	print("Frame updated")
 	frame = vs.read()
 	frame = frame[1] if args.get("video", False) else frame
 
@@ -86,7 +94,17 @@ while True:
 	# resize the frame (so we can process it faster)
 	frame = imutils.resize(frame, width=600)
 	edges = cv2.Canny(frame,100,200)
-	cv2.imshow("Frame", edges)
+
+	# Detect blobs.
+	keypoints = detector.detect(edges)
+
+	# Draw detected blobs as red circles.
+	# cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures
+	# the size of the circle corresponds to the size of blob
+
+	im_with_keypoints = cv2.drawKeypoints(edges, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+	cv2.imshow("Frame", im_with_keypoints)
 
 	key = cv2.waitKey(1) & 0xFF
 
@@ -103,4 +121,3 @@ else:
 
 # close all windows
 cv2.destroyAllWindows()
-'''
