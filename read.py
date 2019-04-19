@@ -38,17 +38,16 @@ import glob
 params = cv2.SimpleBlobDetector_Params()
 
 # Change thresholds
-params.minThreshold = 10
-params.maxThreshold = 200
+params.minThreshold = 0
+params.maxThreshold = 500
 
 
-# Filter by Area.
-params.filterByArea = True
-params.minArea = 150
+#Basically we don't care how big the blob is or how circular it is.
+#Any collection of pixels is a potential character
+params.filterByArea = False
+params.filterByConvexity = False
+params.filterByCircularity = False
 
-# Filter by Inertia
-params.filterByInertia = True
-params.minInertiaRatio = 0.01
 # Create a detector with the parameters
 detector = cv2.SimpleBlobDetector_create(params)
 
@@ -62,6 +61,34 @@ ap.add_argument("-v", "--video", type=str,
 ap.add_argument("-t", "--tracker", type=str, default="kcf",
 	help="OpenCV object tracker type")
 args = vars(ap.parse_args())
+
+img = cv2.imread('text.png',0)
+edges = cv2.Canny(img,100,200)
+
+
+
+
+# Detect blobs.
+keypoints = detector.detect(edges)
+print(str(keypoints))
+# Draw detected blobs as red circles.
+# cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures
+# the size of the circle corresponds to the size of blob
+im_with_keypoints = cv2.drawKeypoints(edges, keypoints, np.array([]), (200,0,200), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+cv2.imshow("Frame", im_with_keypoints)
+# Detect blobs.
+keypoints = detector.detect(edges)
+
+
+# Draw detected blobs as red circles.
+# cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures
+# the size of the circle corresponds to the size of blob
+im_with_keypoints = cv2.drawKeypoints(edges, keypoints, np.array([]), (200,0,200), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+cv2.imshow("Frame", im_with_keypoints)
+
+key = cv2.waitKey(0) & 0xFF
 
 
 # initialize OpenCV's special multi-object tracker
@@ -101,8 +128,7 @@ while True:
 	# Draw detected blobs as red circles.
 	# cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures
 	# the size of the circle corresponds to the size of blob
-
-	im_with_keypoints = cv2.drawKeypoints(edges, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+	im_with_keypoints = cv2.drawKeypoints(edges, keypoints, np.array([]), (200,0,200), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
 	cv2.imshow("Frame", im_with_keypoints)
 
