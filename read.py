@@ -54,8 +54,8 @@ while True:
 	# loop over the bounding boxes and draw then on the frame
 	for n, box in enumerate(boxes):
 		(x, y, w, h) = [int(v) for v in box]
-		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
+		roi = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+		cv2.imwrite(str(n)+".png", roi[y+2:y+h-1, x+2:x+w-1])
 	cv2.imshow("Frame", frame)
 
 	key = cv2.waitKey(1) & 0xFF
@@ -68,8 +68,8 @@ while True:
 
 		# create a new object tracker for the bounding box and add it
 		# to our multi-object tracker
-
-		trackers.add(cv2.TrackerCSRT_create() , frame, box)
+		# other than CSRT options include KCF, Boosting, MIL, TLD, MedianFlow, and MOSSE
+		trackers.add(cv2.TrackerKCF_create() , frame, box)
 
 vs.stop()
 
