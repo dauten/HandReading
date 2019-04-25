@@ -55,10 +55,29 @@ while True:
 	for n, box in enumerate(boxes):
 		(x, y, w, h) = [int(v) for v in box]
 		roi = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+		#roi is a matrix of colors (3-tuples)
+		#that must be converted into matrix of intensities (float or int values)
+		#and then all values belo a given threshhold may be dropped?
+
+		for a in range(y, y+h):
+			for b in range(x, x+w):
+				roi[a, b] = (sum(roi[a, b])/3)
+				print(roi[a, b])
+				for z in range(0,3):
+					if roi[a, b][z] < 80:
+						roi[a, b][z] = 0
+					else:
+						roi[a, b][z] = 255
+				print("\t"+str(roi[a, b]))
+
+
 		cv2.imwrite(str(n)+".png", roi[y+2:y+h-1, x+2:x+w-1])
+
 	cv2.imshow("Frame", frame)
 
 	key = cv2.waitKey(1) & 0xFF
+
 	if key == ord("s"):
 
 		# select the bounding box of the object we want to track (make
@@ -70,6 +89,8 @@ while True:
 		# to our multi-object tracker
 		# other than CSRT options include KCF, Boosting, MIL, TLD, MedianFlow, and MOSSE
 		trackers.add(cv2.TrackerKCF_create() , frame, box)
+	elif key == ord("q"):
+		break
 
 vs.stop()
 
