@@ -108,6 +108,14 @@ def findDem(t):
 
     return [l,u,r,d]
 
+def getResult(res):
+    i = 0
+    for r in res:
+        if(r == 1):
+            return i
+        i+=1
+
+
 start = time.time()
 for subdir, dirs, files in os.walk(training_directory):
     for file in files:
@@ -162,14 +170,14 @@ plt.show()
 train_images = train_images / 255.0
 #test_images = test_images / 255.0
 
-'''
+
 #Let's view it again to see if it changed.  The image didn't but the values and scale did
+print(class_dict[train_labels[110000][0]])
 plt.figure()
-plt.imshow(train_images[0])
+plt.imshow(train_images[110000])
 plt.colorbar()
 plt.grid(False)
 plt.show()
-'''
 
 #this does more processing to the image, cconverting it from a 28x28 matrix to a 784 length array.
 #the dense commands actually create neurons/nodes
@@ -181,7 +189,7 @@ model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=
 
 #this is the actual 'train' step
 #you can play with epochs, increasing it takes longer but provides slightly more accuracy
-model.fit(train_images, train_labels, epochs=5)
+model.fit(train_images, train_labels, epochs=65)
 
 
 #this runs our test dataset through our network and tells us how accurate it was
@@ -191,6 +199,13 @@ model.fit(train_images, train_labels, epochs=5)
 #garbage increase for taking 20x as long
 test_loss, test_acc = model.evaluate(train_images, train_labels)
 print('Test accuracy:', test_acc)
+
+tester = np.ndarray((1,28,28))
+tester[0] = training_images[110000]
+result = model.predict(tester)
+print(str(class_dict[getResult(result[0])]))
+
+model.save("HandWritingNN.h5")
 
 '''
 Where to go from here?
