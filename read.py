@@ -37,6 +37,9 @@ time.sleep(1.0)
 # initialize OpenCV's special multi-object tracker
 trackers = cv2.MultiTracker_create()
 
+
+
+
 # loop over frames from the video stream
 while True:
 	# grab the current frame, then handle if we are using a
@@ -48,7 +51,7 @@ while True:
 		break
 
 	# resize the frame (so we can process it faster)
-	frame = imutils.resize(frame, width=600)
+	frame = imutils.resize(frame, width=300)
 
 	(success, boxes) = trackers.update(frame)
 	# loop over the bounding boxes and draw then on the frame
@@ -63,13 +66,11 @@ while True:
 		for a in range(y, y+h):
 			for b in range(x, x+w):
 				roi[a, b] = (sum(roi[a, b])/3)
-				print(roi[a, b])
 				for z in range(0,3):
 					if roi[a, b][z] < 80:
 						roi[a, b][z] = 0
 					else:
 						roi[a, b][z] = 255
-				print("\t"+str(roi[a, b]))
 
 
 		cv2.imwrite(str(n)+".png", roi[y+2:y+h-1, x+2:x+w-1])
