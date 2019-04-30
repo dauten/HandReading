@@ -25,26 +25,40 @@ import numpy as np
 from matplotlib import pyplot as plt
 import glob
 from imutils.object_detection import non_max_suppression
-
+from interpret import interpreter
+import PIL
 
 # initialize OpenCV's special multi-object tracker
+# construct the argument parser and parse the arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--image", type=str,
+	help="path to input image file")
+args = vars(ap.parse_args())
 
-print("[INFO] starting video stream...")
-vs = VideoStream(src=0).start()
-time.sleep(1.0)
+# if a video path was not supplied, grab the reference to the web cam
+if not args.get("image", False):
+	print("[INFO] starting video stream...")
+	vs = VideoStream(src=0).start()
+	time.sleep(1.0)
+else:
+	vs = cv2.VideoCapture(args["image"])
+
 
 
 # initialize OpenCV's special multi-object tracker
 trackers = cv2.MultiTracker_create()
 
+model = interpreter()
 
 
 
 # loop over frames from the video stream
 while True:
-	# grab the current frame, then handle if we are using a
-	# VideoStream or VideoCapture object
-	frame = vs.read()
+
+	if not args.get("image", False):
+		frame = vs.read()
+	else:
+		frame = cv2.imread(args["image"])
 
 	# check to see if we have reached the end of the stream
 	if frame is None:
@@ -67,7 +81,7 @@ while True:
 			for b in range(x, x+w):
 				roi[a, b] = (sum(roi[a, b])/3)
 				for z in range(0,3):
-					if roi[a, b][z] < 80:
+					if roi[a, b][z] < 120:
 						roi[a, b][z] = 0
 					else:
 						roi[a, b][z] = 255
@@ -92,8 +106,25 @@ while True:
 		trackers.add(cv2.TrackerKCF_create() , frame, box)
 	elif key == ord("q"):
 		break
+	elif key == ord("e"):
+		print("Reading images:")
+		for n, box in enumerate(boxes):
 
-vs.stop()
+			fname = str(n)+".png"
+			print("Evaluating "+fname)
+			img = PIL.Image.open(fname).convert("L")
+			print(model.eval(img))
+
+
+
+
+# if we are using a webcam, release the pointer
+if not args.get("image", False):
+	vs.stop()
+# otherwise, release the file pointer
+else:
+	vs.release()
+
 
 
 # close all windows

@@ -47,13 +47,11 @@ params.maxThreshold = 200
 
 # Filter by Area.
 params.filterByArea = True
-params.minArea = 150
+params.minArea = 120
 # Filter by Convexity
 params.filterByConvexity = True
-params.minConvexity = 0.57
-# Filter by Inertia
-params.filterByInertia = True
-params.minInertiaRatio = 0.01
+params.minConvexity = 0.5
+
 
 
 
