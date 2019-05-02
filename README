@@ -1,0 +1,9 @@
+HandReading is a python3 program that acts as a simple OCR suite with a few options.  The OCR is done with TensorFlow neural nets trained with the NIST handwritting data sets.  Imaging is used with the openCV library  It is trained only with lowercase english characters at the moment.
+<br><br>
+sketch.py is a demo feature that allows a user to test the OCR software.  When run, a sketch board is opened that can be drawn on with the mouse.  On this board whenever the 'e' key is pressed the current content of the canvas is interpreted as a single character and the neural net's best guess is printed to the terminal.  If its blank nothing is returned.  Whenever the 'c' key is pressed the canvas is cleared so another character can be drawn.
+<br><br>
+read.py allows a user to select a set of characters to pass to the neural net all at once.  When run without any arguments passed to it the webcam 0 is used as the source of input.  Otherwise the user can use the -i or --image flag as a command line argument to pass a single image to use as input instead.
+<br>
+Whatever the source image is, the user can then press 's' to enter selection mode and highlight a section of the image to track.  They can do this for any number of characters.  Whenever the 'e' is pressed all of the selected regions are evaluated in order of selection.  The neural net's best guess for each one is printed to the terminal.
+<br><br>
+HandReading runs with python3 using the libraries numpy, cv2, matplotlib, PIL, tensorflow, and the standard libraries time and os
