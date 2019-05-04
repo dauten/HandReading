@@ -134,9 +134,8 @@ train_images = train_images / 255.0
 
 #this does more processing to the image, cconverting it from a 28x28 matrix to a 784 length array.
 #the dense commands actually create neurons/nodes
-model = keras.Sequential([keras.layers.Flatten(input_shape=(28, 28)), keras.layers.Dense(128, activation=tf.nn.relu), keras.layers.Dense(128, activation=tf.nn.relu),
-    keras.layers.Dense(128, activation=tf.nn.relu), keras.layers.Dense(128, activation=tf.nn.relu), keras.layers.Dense(128, activation=tf.nn.relu),
-    keras.layers.Dense(128, activation=tf.nn.relu), keras.layers.Dense(128, activation=tf.nn.relu), keras.layers.Dense(128, activation=tf.nn.relu),
+model = keras.Sequential([keras.layers.Flatten(input_shape=(28, 28)),
+    keras.layers.Dense(128, activation=tf.nn.relu), keras.layers.Dense(128, activation=tf.nn.relu),
     keras.layers.Dense(26, activation=tf.nn.softmax)])
 
 #this tells the neural net how to update things for training
@@ -144,7 +143,7 @@ model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=
 
 #this is the actual 'train' step
 #you can play with epochs, increasing it takes longer but provides slightly more accuracy
-model.fit(train_images, train_labels, epochs=10)
+model.fit(train_images, train_labels, epochs=50)
 
 
 test_loss, test_acc = model.evaluate(train_images, train_labels)
