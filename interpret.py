@@ -90,7 +90,7 @@ class interpreter:
 
     #Loads the model into the class. Change filepath for different models
     def __init__(self):
-        self.model =  keras.models.load_model('HandWritingNN.h5')
+        self.model =  keras.models.load_model('HandWritingNN2.h5')
 
     #Takes in an image and preprocesses it before predicting what it is
     def eval(self, img):
@@ -111,4 +111,4 @@ class interpreter:
 
         result = self.model.predict(imgarray)
 
-        return class_dict[getResult(result[0])]
+        return lowercase_dict[getResult(result[0])]
